@@ -1,0 +1,11 @@
+{
+  "name": "deco-ng",
+  "version": "0.0.1",
+  "description": "TypeScript decorators facilitating work with AngularJS 1.x",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Rose <michael_rose@gmx.de>",
+  "license": "MIT"
+}
