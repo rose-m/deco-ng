@@ -3,12 +3,25 @@
   "version": "0.0.1",
   "description": "TypeScript decorators facilitating work with AngularJS 1.x",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Michael Rose <michael_rose@gmx.de>",
   "license": "MIT",
   "devDependencies": {
+    "@types/angular": "^1.6.18",
+    "@types/angular-mocks": "^1.5.9",
+    "@types/jasmine": "^2.5.51",
+    "angular": "^1.6.4",
+    "angular-mocks": "^1.6.4",
+    "jasmine-core": "^2.6.2",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-typescript": "^3.0.3",
     "typescript": "^2.3.4"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.10"
+  },
+  "scripts": {
+    "test": "karma start karma.conf.js"
   }
 }
