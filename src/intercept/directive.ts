@@ -7,6 +7,7 @@ export default function directiveWrapper(ngModule: ng.IModule) {
     (ngModule as any).directive = wrap(ngModule.directive, {
         transformArguments: directiveArgumentTransformation
     });
+    return ngModule;
 }
 
 function directiveArgumentTransformation(directiveArguments: any[]): any[] {
