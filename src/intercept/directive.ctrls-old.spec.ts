@@ -1,9 +1,11 @@
+import * as angular from 'angular';
+
 describe('Directives with Controllers', () => {
     /**
      * Setting up module to use for directive testing
      * @type {angular.IModule}
      */
-    const testModule = angular.module('directive.ctrls', [])
+    const testModule = angular.module('directive.ctrls-old', [])
         .directive('outerDirective', createOuterDirective('inner-directive'))
         .directive('innerDirective', innerDirective)
         .directive('outerDirectivePre', createOuterDirective('inner-directive-pre'))
@@ -16,7 +18,7 @@ describe('Directives with Controllers', () => {
     // ==============================
     let $compile: ng.ICompileService, $rootScope: ng.IRootScopeService;
 
-    beforeEach(angular.mock.module('directive.ctrls'));
+    beforeEach(angular.mock.module('directive.ctrls-old'));
     beforeEach(angular.mock.inject((_$compile_, _$rootScope_) => {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
