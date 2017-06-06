@@ -1,9 +1,9 @@
-describe('intercept.directive', () => {
+describe('Simple Directives', () => {
     /**
      * Setting up module to use for directive testing
      * @type {angular.IModule}
      */
-    const testModule = angular.module('test', [])
+    const testModule = angular.module('directive.simple', [])
         .directive('simpleDirective', simpleDirective)
         .directive('simpleDirectiveWithInjection', simpleDirectiveWithInjection)
         .directive('simpleDirectiveWithMinifiedInjection', ['$rootScope', simpleDirectiveWithInjection]);
@@ -13,7 +13,7 @@ describe('intercept.directive', () => {
     // ==============================
     let $compile: ng.ICompileService, $rootScope: ng.IRootScopeService;
 
-    beforeEach(angular.mock.module('test'));
+    beforeEach(angular.mock.module('directive.simple'));
     beforeEach(angular.mock.inject((_$compile_, _$rootScope_) => {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
