@@ -1,6 +1,6 @@
 import * as angular from 'angular';
 import {wrap} from './utils';
-import directiveWrapper from './directive';
+import directiveWrapper from './directive/index';
 
 export function registerInterceptors(): void {
     (angular as any).module = wrap(angular.module, {

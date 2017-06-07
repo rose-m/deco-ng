@@ -1,5 +1,5 @@
 import * as angular from 'angular';
-import {Require} from '../decorators/require';
+import {Require} from '../../decorators/require';
 
 describe('Directives with Controllers using Required', () => {
     /**
