@@ -1,3 +1,3 @@
-import {registerInterceptors} from './intercept/index';
+import {inject} from './intercept/index';
 
-registerInterceptors();
+inject();

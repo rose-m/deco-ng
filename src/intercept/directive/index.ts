@@ -1,5 +1,7 @@
 import * as angular from 'angular';
+import {IDirectiveCompileFn, IDirectiveLinkFn, IDirectivePrePost} from 'angular';
 import {wrap} from '../utils';
+import Hooks from './hooks';
 
 /**
  * Modifies the given `ngModule` to intercept the directive function.
@@ -45,7 +47,53 @@ function directiveArgumentTransformation(directiveArguments: any[]): any[] {
     return directiveArguments;
 }
 
+/**
+ * This function takes the result of a {@link ng.IDirectiveFactory} and injects the required mechanisms.
+ * @param result The original result of the {@link ng.IDirectiveFactory}
+ * @return {ng.IDirective | ng.IDirectiveLinkFn}
+ */
 function directiveFactoryResultTransformation(result: ng.IDirective | ng.IDirectiveLinkFn): ng.IDirective | ng.IDirectiveLinkFn {
+    if (typeof result === 'function') {
+        // When its just a plain link function there's nothing to do
+        return result;
+    }
+
+    let compileFn: IDirectiveCompileFn;
+    if (result.compile) {
+        compileFn = wrap(result.compile, {
+            transformResult: (compileResult: IDirectiveLinkFn | IDirectivePrePost) => {
+                const runHooks = () => Hooks.runPreInterceptions(result);
+                if (typeof compileResult === 'function') {
+                    return {
+                        pre: runHooks,
+                        post: compileResult
+                    };
+                } else if (compileResult) {
+                    const pre = compileResult.pre ? wrap(compileResult.pre, {
+                        transformArguments: (fnArguments: any) => {
+                            runHooks();
+                            return fnArguments;
+                        }
+                    }) : runHooks;
+                    return {...compileResult, pre};
+                } else {
+                    return {pre: runHooks};
+                }
+            }
+        });
+    } else {
+        const linkFn = result.link as IDirectiveLinkFn;
+        compileFn = () => ({
+            pre: () => {
+                Hooks.runPreInterceptions(result);
+            },
+            post: linkFn
+        });
+        delete result.link;
+    }
+
+    result.compile = compileFn;
+
     return result;
 }
 
