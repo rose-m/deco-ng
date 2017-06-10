@@ -1,4 +1,5 @@
 import * as angular from 'angular';
+import {ICompileService, IDirective, IRootScopeService} from 'angular';
 import {Require} from '../../decorators/require';
 
 describe('Directives with Controllers using Required', () => {
@@ -9,13 +10,13 @@ describe('Directives with Controllers using Required', () => {
     const testModule = angular.module('directive.ctrls-required', [])
         .directive('outerDirective', outerDirective)
         .directive('innerDirective', innerDirective);
-        // .directive('innerDirectivePre', innerDirectivePre)
-        // .directive('innerDirectivePost', innerDirectivePost);
+    // .directive('innerDirectivePre', innerDirectivePre)
+    // .directive('innerDirectivePost', innerDirectivePost);
 
     // ==============================
     // Starting test implementation
     // ==============================
-    let $compile: ng.ICompileService, $rootScope: ng.IRootScopeService;
+    let $compile: ICompileService, $rootScope: IRootScopeService;
 
     beforeEach(angular.mock.module('directive.ctrls-required'));
     beforeEach(angular.mock.inject((_$compile_, _$rootScope_) => {
@@ -48,17 +49,17 @@ class OuterTestController {
     }
 }
 
-class InnerTestController {
+class InnerTestWithRequireController {
     bindingValue: string;
 
-    @Require('outerDirective')
+    @Require('^^outerDirective')
     outerTestController: OuterTestController;
 
     constructor() {
     }
 }
 
-function outerDirective(): ng.IDirective {
+function outerDirective(): IDirective {
     return {
         restrict: 'E',
         transclude: true,
@@ -75,7 +76,7 @@ function outerDirective(): ng.IDirective {
 const PLAIN_INNER_DIRECTIVE = {
     restrict: 'E',
     template: `<div>{{$ctrl.outerTestController.content}} - {{$ctrl.bindingValue}}</div>`,
-    controller: InnerTestController,
+    controller: InnerTestWithRequireController,
     controllerAs: '$ctrl',
     bindToController: true,
     scope: {
@@ -83,19 +84,18 @@ const PLAIN_INNER_DIRECTIVE = {
     }
 };
 
-function innerDirective(): ng.IDirective {
-    return angular.extend({
-    }, PLAIN_INNER_DIRECTIVE);
+function innerDirective(): IDirective {
+    return angular.extend({}, PLAIN_INNER_DIRECTIVE);
 }
 
-// function innerDirectivePre(): ng.IDirective {
+// function innerDirectivePre(): IDirective {
 //     return angular.extend({
 //         require: ['^^outerDirective', 'innerDirectivePre'],
 //         compile: () => {
 //             return {
 //                 pre: (scope, element, attrs, ctrls: any[]) => {
 //                     const outer = ctrls[0] as OuterTestController;
-//                     const inner = ctrls[1] as InnerTestController;
+//                     const inner = ctrls[1] as InnerTestWithRequireController;
 //                     inner.outerTestController = outer;
 //                 }
 //             };
@@ -103,14 +103,14 @@ function innerDirective(): ng.IDirective {
 //     }, PLAIN_INNER_DIRECTIVE);
 // }
 //
-// function innerDirectivePost(): ng.IDirective {
+// function innerDirectivePost(): IDirective {
 //     return angular.extend({
 //         require: ['^^outerDirective', 'innerDirectivePost'],
 //         compile: () => {
 //             return {
 //                 post: (scope, element, attrs, ctrls: any[]) => {
 //                     const outer = ctrls[0] as OuterTestController;
-//                     const inner = ctrls[1] as InnerTestController;
+//                     const inner = ctrls[1] as InnerTestWithRequireController;
 //                     inner.outerTestController = outer;
 //                 }
 //             };

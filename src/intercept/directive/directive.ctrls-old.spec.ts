@@ -1,4 +1,5 @@
 import * as angular from 'angular';
+import {ICompileService, IDirective, IRootScopeService} from 'angular';
 
 describe('Directives with Controllers', () => {
     /**
@@ -16,7 +17,7 @@ describe('Directives with Controllers', () => {
     // ==============================
     // Starting test implementation
     // ==============================
-    let $compile: ng.ICompileService, $rootScope: ng.IRootScopeService;
+    let $compile: ICompileService, $rootScope: IRootScopeService;
 
     beforeEach(angular.mock.module('directive.ctrls-old'));
     beforeEach(angular.mock.inject((_$compile_, _$rootScope_) => {
@@ -59,7 +60,7 @@ class InnerTestController {
     }
 }
 
-function createOuterDirective(innerDirective: string): () => ng.IDirective {
+function createOuterDirective(innerDirective: string): () => IDirective {
     return () => {
         return {
             restrict: 'E',
@@ -85,7 +86,7 @@ const PLAIN_INNER_DIRECTIVE = {
     }
 };
 
-function innerDirective(): ng.IDirective {
+function innerDirective(): IDirective {
     return angular.extend({
         require: ['^^outerDirective', 'innerDirective'],
         link: (scope, element, attrs, ctrls: any[]) => {
@@ -96,7 +97,7 @@ function innerDirective(): ng.IDirective {
     }, PLAIN_INNER_DIRECTIVE);
 }
 
-function innerDirectivePre(): ng.IDirective {
+function innerDirectivePre(): IDirective {
     return angular.extend({
         require: ['^^outerDirectivePre', 'innerDirectivePre'],
         compile: () => {
@@ -111,7 +112,7 @@ function innerDirectivePre(): ng.IDirective {
     }, PLAIN_INNER_DIRECTIVE);
 }
 
-function innerDirectivePost(): ng.IDirective {
+function innerDirectivePost(): IDirective {
     return angular.extend({
         require: ['^^outerDirectivePost', 'innerDirectivePost'],
         compile: () => {

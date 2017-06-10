@@ -1,3 +1,6 @@
+import * as angular from 'angular';
+import {ICompileService, IDirective, IRootScopeService} from 'angular';
+
 describe('Simple Directives', () => {
     /**
      * Setting up module to use for directive testing
@@ -11,7 +14,7 @@ describe('Simple Directives', () => {
     // ==============================
     // Starting test implementation
     // ==============================
-    let $compile: ng.ICompileService, $rootScope: ng.IRootScopeService;
+    let $compile: ICompileService, $rootScope: IRootScopeService;
 
     beforeEach(angular.mock.module('directive.simple'));
     beforeEach(angular.mock.inject((_$compile_, _$rootScope_) => {
@@ -50,7 +53,7 @@ describe('Simple Directives', () => {
     });
 });
 
-function simpleDirective(): ng.IDirective {
+function simpleDirective(): IDirective {
     return {
         restrict: 'E',
         template: `<div>{{variable}}</div>`,
@@ -60,7 +63,7 @@ function simpleDirective(): ng.IDirective {
     };
 }
 
-function simpleDirectiveWithInjection($rootScope: ng.IRootScopeService): ng.IDirective {
+function simpleDirectiveWithInjection($rootScope: IRootScopeService): IDirective {
     return {
         restrict: 'E',
         template: `<div>{{variable}}</div>`,

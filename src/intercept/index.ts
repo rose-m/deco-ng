@@ -1,9 +1,11 @@
 import * as angular from 'angular';
 import {wrap} from './utils';
-import directiveWrapper from './directive/index';
+import * as directives from './directive/index';
+
+export {directives}
 
 export function inject(): void {
     (angular as any).module = wrap(angular.module, {
-        transformResult: directiveWrapper
+        transformResult: directives.directiveWrapper
     });
 }

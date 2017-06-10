@@ -1,12 +1,25 @@
 import * as angular from 'angular';
-import {IDirectiveCompileFn, IDirectiveLinkFn, IDirectivePrePost} from 'angular';
+import {
+    IAttributes,
+    IAugmentedJQuery,
+    IDirective,
+    IDirectiveCompileFn,
+    IDirectiveFactory,
+    IDirectiveLinkFn,
+    IDirectivePrePost,
+    IModule,
+    Injectable,
+    IScope
+} from 'angular';
 import {wrap} from '../utils';
-import Hooks from './hooks';
+import hooks from './hooks';
+
+export {hooks};
 
 /**
  * Modifies the given `ngModule` to intercept the directive function.
  */
-export default function directiveWrapper(ngModule: ng.IModule) {
+export function directiveWrapper(ngModule: IModule) {
     (ngModule as any).directive = wrap(ngModule.directive, {
         transformArguments: directiveArgumentTransformation
     });
@@ -22,22 +35,23 @@ export default function directiveWrapper(ngModule: ng.IModule) {
  * @see angular.IDirectiveFactory
  */
 function directiveArgumentTransformation(directiveArguments: any[]): any[] {
-    const fnOrInjectables = directiveArguments[1] as ng.Injectable<ng.IDirectiveFactory>;
+    const directiveName = directiveArguments[0] as string;
+    const fnOrInjectables = directiveArguments[1] as Injectable<IDirectiveFactory>;
 
-    let factoryFn: ng.IDirectiveFactory;
+    let factoryFn: IDirectiveFactory;
     if (typeof fnOrInjectables === 'function') {
         factoryFn = fnOrInjectables;
     } else {
-        factoryFn = fnOrInjectables[fnOrInjectables.length - 1] as ng.IDirectiveFactory;
+        factoryFn = fnOrInjectables[fnOrInjectables.length - 1] as IDirectiveFactory;
     }
 
     const newFactoryFn = wrap(factoryFn, {
-        transformResult: directiveFactoryResultTransformation
+        transformResult: (fnResult) => directiveFactoryResultTransformation(directiveName, fnResult)
     });
 
     if (typeof fnOrInjectables === 'function') {
         angular.injector().annotate(factoryFn);
-        const injectables = factoryFn.$inject as Array<string | ng.IDirectiveFactory>;
+        const injectables = factoryFn.$inject as Array<string | IDirectiveFactory>;
         injectables.push(newFactoryFn);
         directiveArguments[1] = injectables;
     } else {
@@ -48,11 +62,12 @@ function directiveArgumentTransformation(directiveArguments: any[]): any[] {
 }
 
 /**
- * This function takes the result of a {@link ng.IDirectiveFactory} and injects the required mechanisms.
- * @param result The original result of the {@link ng.IDirectiveFactory}
- * @return {ng.IDirective | ng.IDirectiveLinkFn}
+ * This function takes the result of a {@link IDirectiveFactory} and injects the required mechanisms.
+ * @param directiveName The name of the directive
+ * @param result The original result of the {@link IDirectiveFactory}
+ * @return {IDirective | IDirectiveLinkFn}
  */
-function directiveFactoryResultTransformation(result: ng.IDirective | ng.IDirectiveLinkFn): ng.IDirective | ng.IDirectiveLinkFn {
+function directiveFactoryResultTransformation(directiveName: string, result: IDirective | IDirectiveLinkFn): IDirective | IDirectiveLinkFn {
     if (typeof result === 'function') {
         // When its just a plain link function there's nothing to do
         return result;
@@ -62,7 +77,7 @@ function directiveFactoryResultTransformation(result: ng.IDirective | ng.IDirect
     if (result.compile) {
         compileFn = wrap(result.compile, {
             transformResult: (compileResult: IDirectiveLinkFn | IDirectivePrePost) => {
-                const runHooks = () => Hooks.runPreInterceptions(result);
+                const runHooks = (scope: IScope, element: IAugmentedJQuery, attrs: IAttributes) => hooks.runPreInterceptions(result, scope, element, attrs);
                 if (typeof compileResult === 'function') {
                     return {
                         pre: runHooks,
@@ -70,8 +85,8 @@ function directiveFactoryResultTransformation(result: ng.IDirective | ng.IDirect
                     };
                 } else if (compileResult) {
                     const pre = compileResult.pre ? wrap(compileResult.pre, {
-                        transformArguments: (fnArguments: any) => {
-                            runHooks();
+                        transformArguments: (fnArguments: any[]) => {
+                            runHooks(fnArguments[0], fnArguments[1], fnArguments[2]);
                             return fnArguments;
                         }
                     }) : runHooks;
@@ -84,8 +99,8 @@ function directiveFactoryResultTransformation(result: ng.IDirective | ng.IDirect
     } else {
         const linkFn = result.link as IDirectiveLinkFn;
         compileFn = () => ({
-            pre: () => {
-                Hooks.runPreInterceptions(result);
+            pre: (scope, element, attrs) => {
+                hooks.runPreInterceptions(result, scope, element, attrs);
             },
             post: linkFn
         });
@@ -93,6 +108,8 @@ function directiveFactoryResultTransformation(result: ng.IDirective | ng.IDirect
     }
 
     result.compile = compileFn;
+
+    hooks.runDirectiveResultInterceptions(directiveName, result);
 
     return result;
 }
