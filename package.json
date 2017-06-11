@@ -2,8 +2,10 @@
   "name": "deco-ng",
   "version": "0.0.1",
   "description": "TypeScript decorators facilitating work with AngularJS 1.x",
-  "main": "index.js",
+  "main": "dist/decoNg.js",
+  "typings": "dist/index.d.ts",
   "author": "Michael Rose <michael_rose@gmx.de>",
+  "repository": "https://github.com/rose-m/deco-ng.git",
   "license": "MIT",
   "devDependencies": {
     "@types/angular": "^1.6.18",
