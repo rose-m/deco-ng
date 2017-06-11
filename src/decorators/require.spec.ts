@@ -88,7 +88,6 @@ class OuterTestController {
 
     constructor($rootScope: IRootScopeService) {
         $rootScope.$on('changeOuter', (e, content) => {
-            console.log('outer changed', content);
             this.valueForTesting = content;
         })
     }
