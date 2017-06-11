@@ -24,7 +24,7 @@ export function Require(directiveName: string): any {
     });
 }
 
-export function getRequiredDirectives(inst: any, property: string): string {
+function getRequiredDirectives(inst: any, property: string): string {
     return Reflect.getMetadata(REQUIRE_KEY, inst, property);
 }
 
@@ -57,7 +57,6 @@ function extractAndSetControllers(directive: IAnnotatedDirective, scope: IScope,
 
     const ctrl = controller[controller.length - 1] as any;
     directive.$decoDescriptors.forEach((d, i) => {
-        console.log(`setting controller ${d.directiveName} -> ${d.propertyName}`);
         ctrl[d.propertyName] = controller[i];
     });
 }

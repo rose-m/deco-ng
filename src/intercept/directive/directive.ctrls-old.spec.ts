@@ -1,7 +1,10 @@
 import * as angular from 'angular';
 import {ICompileService, IDirective, IRootScopeService} from 'angular';
+import {inject} from '../../index';
 
 describe('Directives with Controllers', () => {
+    inject();
+
     /**
      * Setting up module to use for directive testing
      * @type {angular.IModule}

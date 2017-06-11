@@ -1,13 +1,16 @@
 import * as angular from 'angular';
 import {ICompileService, IDirective, IRootScopeService} from 'angular';
-import {Require} from '../../decorators/require';
+import {Require} from './require';
+import {inject} from '../index';
 
 describe('Directives with Controllers using Required', () => {
+    inject();
+
     /**
      * Setting up module to use for directive testing
      * @type {angular.IModule}
      */
-    const testModule = angular.module('directive.ctrls-required', [])
+    const testModule = angular.module('require.spec', [])
         .directive('outerDirective', outerDirective)
         .directive('innerDirective', innerDirective);
     // .directive('innerDirectivePre', innerDirectivePre)
@@ -18,7 +21,7 @@ describe('Directives with Controllers using Required', () => {
     // ==============================
     let $compile: ICompileService, $rootScope: IRootScopeService;
 
-    beforeEach(angular.mock.module('directive.ctrls-required'));
+    beforeEach(angular.mock.module('require.spec'));
     beforeEach(angular.mock.inject((_$compile_, _$rootScope_) => {
         $compile = _$compile_;
         $rootScope = _$rootScope_;
