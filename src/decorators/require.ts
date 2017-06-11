@@ -13,6 +13,17 @@ interface IAnnotatedDirective extends IDirective {
     $decoDescriptors?: IRequireDescriptor[];
 }
 
+/**
+ * Annotate a class member of your directive controller with this decorator in order to have it automatically set to the controller
+ * of the required `directiveName`. Use the same syntax as inside {@link IDirective#require}.
+ *
+ * The pre-link and post-link functions will then be called with an array containing all controllers. The *last* element of the array
+ * will be your own directive controller. The required controllers will be set before any of those methods are called.
+ *
+ * Important: You *cannot* use the {@link IDirective#require} field - it must be left unset.
+ *
+ * @param directiveName Directive to require
+ */
 export function Require(directiveName: string): any {
     return wrap(Reflect.metadata(REQUIRE_KEY, directiveName), {
         transformArguments: function ([target, property]) {
