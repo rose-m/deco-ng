@@ -2,7 +2,7 @@ import * as angular from 'angular';
 import {ICompileService, IDirective, IRootScopeService} from 'angular';
 import {inject} from '../../index';
 
-describe('Directives with Controllers', () => {
+describe('Directives with Controllers in traditional fashion', () => {
     inject();
 
     /**
@@ -28,19 +28,19 @@ describe('Directives with Controllers', () => {
         $rootScope = _$rootScope_;
     }));
 
-    it('should still work in old style - link', () => {
+    it('should still work with link', () => {
         const element = $compile(`<outer-directive content="just testing"></outer-directive>`)($rootScope);
         $rootScope.$digest();
         expect(element.html()).toContain('just testing - test');
     });
 
-    it('should still work in old style - pre-link', () => {
+    it('should still work with pre-link', () => {
         const element = $compile(`<outer-directive-pre content="just testing"></outer-directive-pre>`)($rootScope);
         $rootScope.$digest();
         expect(element.html()).toContain('just testing - test');
     });
 
-    it('should still work in old style - post-link', () => {
+    it('should still work with post-link', () => {
         const element = $compile(`<outer-directive-post content="just testing"></outer-directive-post>`)($rootScope);
         $rootScope.$digest();
         expect(element.html()).toContain('just testing - test');

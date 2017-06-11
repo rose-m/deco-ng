@@ -29,13 +29,13 @@ describe('Simple Directives', () => {
         expect(testModule).toBeDefined();
     });
 
-    it('does not interfere with simple directive without injection', () => {
+    it('work without injection', () => {
         const element = $compile(`<simple-directive variable="just testing"></simple-directive>`)($rootScope);
         $rootScope.$digest();
         expect(element.html()).toContain('just testing');
     });
 
-    it('does not interfere with simple directive with injection', () => {
+    it('work with injection', () => {
         const spy = jasmine.createSpy('testEventHandler');
         $rootScope.$on('testevent', spy);
 
@@ -45,7 +45,7 @@ describe('Simple Directives', () => {
         expect(spy.calls.mostRecent().args[1]).toEqual('test data');
     });
 
-    it('does not interfere with simple directive with injection when minifaction safe', () => {
+    it('work with injection when minifaction safe', () => {
         const spy = jasmine.createSpy('testEventHandler');
         $rootScope.$on('testevent', spy);
 
