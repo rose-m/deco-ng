@@ -1,0 +1,10 @@
+node_modules/
+src/
+
+*.log
+*.tgz
+
+karma.conf.js
+rollup.config.js
+test.html
+tsconfig.json

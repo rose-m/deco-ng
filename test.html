@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>This is a test file</title>
+
+    <script type="text/javascript" src="node_modules/angular/angular.js"></script>
+    <script type="text/javascript" src="node_modules/reflect-metadata/Reflect.js"></script>
+    <script type="text/javascript" src="dist/bundle.js"></script>
+</head>
+<body>
+<p>Check the console if there are any errors after running - but should show success</p>
+<pre>npm run build</pre>
+<p>
+    Result: <code id="result">awaiting result</code>
+</p>
+
+<script>
+    try {
+        decoNg.inject();
+        document.getElementById('result').innerHTML = 'success';
+    } catch (e) {
+        document.getElementById('result').innerHTML = 'error';
+    }
+</script>
+</body>
+</html>
