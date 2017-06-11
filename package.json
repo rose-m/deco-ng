@@ -16,12 +16,15 @@
     "karma-chrome-launcher": "^2.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-typescript": "^3.0.3",
+    "rollup": "^0.42.0",
+    "rollup-plugin-typescript": "^0.8.1",
     "typescript": "^2.3.4"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.10"
   },
   "scripts": {
+    "build": "rollup -c",
     "test": "karma start karma.conf.js"
   }
 }

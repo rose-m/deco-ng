@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "amd",
-    "declaration": true,
-    "sourceMap": true,
-    "outFile": "./dist/index.js",
+    "target": "es2015",
+    "outDir": "dist/",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "removeComments": true
   },
   "include": [
     "src/**/*.ts"

@@ -1,4 +1,3 @@
-import * as angular from 'angular';
 import {IDirective, IDirectiveCompileFn, IDirectiveFactory, IDirectiveLinkFn, IDirectivePrePost, IModule, Injectable} from 'angular';
 import {wrap} from '../utils';
 import hooks from './hooks';
@@ -39,7 +38,7 @@ function directiveArgumentTransformation(directiveArguments: any[]): any[] {
     });
 
     if (typeof fnOrInjectables === 'function') {
-        angular.injector().annotate(factoryFn);
+        (window as any).angular.injector().annotate(factoryFn);
         const injectables = factoryFn.$inject as Array<string | IDirectiveFactory>;
         injectables.push(newFactoryFn);
         directiveArguments[1] = injectables;
