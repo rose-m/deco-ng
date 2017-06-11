@@ -22,7 +22,9 @@ module.exports = function (config) {
         ],
 
         // list of files to exclude
-        exclude: [],
+        exclude: [
+            'src/index.d.ts'
+        ],
 
 
         // preprocess matching files before serving them to the browser

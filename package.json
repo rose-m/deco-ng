@@ -24,7 +24,7 @@
     "reflect-metadata": "^0.1.10"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && cp src/index.d.ts dist/",
     "test": "karma start karma.conf.js"
   }
 }
