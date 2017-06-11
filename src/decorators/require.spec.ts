@@ -8,7 +8,6 @@ describe('Directives with Controllers using @Require', () => {
 
     /**
      * Setting up module to use for directive testing
-     * @type {angular.IModule}
      */
     const testModule = angular.module('require.spec', [])
         .directive('outerDirective', outerDirective)

@@ -7,7 +7,6 @@ describe('Simple Directives', () => {
 
     /**
      * Setting up module to use for directive testing
-     * @type {angular.IModule}
      */
     const testModule = angular.module('directive.simple', [])
         .directive('simpleDirective', simpleDirective)

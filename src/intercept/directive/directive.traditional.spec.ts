@@ -7,7 +7,6 @@ describe('Directives with Controllers in traditional fashion', () => {
 
     /**
      * Setting up module to use for directive testing
-     * @type {angular.IModule}
      */
     const testModule = angular.module('directive.ctrls-old', [])
         .directive('outerDirective', createOuterDirective('inner-directive'))
