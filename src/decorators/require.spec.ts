@@ -61,13 +61,35 @@ describe('Directives with Controllers using @Require', () => {
         $rootScope.$digest();
         expect(element.html()).toContain('just testing - test and post');
     });
+
+    it('should work when used multiple times', () => {
+        const element = $compile(`
+            <outer-directive content="just testing">
+                <inner-directive binding-value="test 1"></inner-directive>
+                <inner-directive binding-value="test 2"></inner-directive>
+            </outer-directive>`
+        )($rootScope);
+
+        $rootScope.$digest();
+        expect(element.html()).toContain('just testing - test 1 and');
+        expect(element.html()).toContain('just testing - test 2 and');
+
+        $rootScope.$emit('changeOuter', '3');
+        $rootScope.$digest();
+
+        expect(element.html()).toContain('just testing - test 1 and 3');
+        expect(element.html()).toContain('just testing - test 2 and 3');
+    });
 });
 
 class OuterTestController {
     readonly content: string;
     valueForTesting: string;
 
-    constructor() {
+    constructor($rootScope: IRootScopeService) {
+        $rootScope.$on('changeOuter', (e, content) => {
+            this.valueForTesting = content;
+        })
     }
 }
 

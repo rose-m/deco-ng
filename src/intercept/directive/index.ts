@@ -7,10 +7,14 @@ export {hooks};
 /**
  * Modifies the given `ngModule` to intercept the directive function.
  */
-export function directiveWrapper(ngModule: IModule) {
-    (ngModule as any).directive = wrap(ngModule.directive, {
-        transformArguments: directiveArgumentTransformation
-    });
+export function directiveWrapper(ngModule: IModule, fnArguments: any[]) {
+    const anyModule = ngModule as any;
+    if (fnArguments && fnArguments.length > 1 && !anyModule.directive.__intercepted) {
+        anyModule.directive = wrap(ngModule.directive, {
+            transformArguments: directiveArgumentTransformation
+        });
+        anyModule.directive.__intercepted = true;
+    }
     return ngModule;
 }
 
