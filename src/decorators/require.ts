@@ -51,7 +51,7 @@ function handleRequireInjection(directiveName: string, directive: IAnnotatedDire
         return;
     }
 
-    if (directive.require) {
+    if (typeof directive.require === 'string' || (Array.isArray(directive.require) && directive.require.length)) {
         throw new Error('directive already uses require property');
     }
 
