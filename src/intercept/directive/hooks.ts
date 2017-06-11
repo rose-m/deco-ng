@@ -1,4 +1,4 @@
-import {IAttributes, IAugmentedJQuery, IDirective, IDirectiveLinkFn, IScope} from 'angular';
+import {IAttributes, IAugmentedJQuery, IController, IDirective, IDirectiveLinkFn, IScope} from 'angular';
 
 export interface IDirectiveHook {
     /**
@@ -15,9 +15,11 @@ export interface IDirectiveHook {
      * @param scope
      * @param element
      * @param attrs
+     * @param controller
      * @see IDirectiveLinkFn
      */
-    interceptPre?(directive: IDirective, scope: IScope, element: IAugmentedJQuery, attrs: IAttributes): void;
+    interceptPre?(directive: IDirective, scope: IScope, element: IAugmentedJQuery, attrs: IAttributes,
+                  controller?: IController | IController[] | {[key: string]: IController}): void;
 }
 
 
@@ -26,7 +28,8 @@ export interface IDirectiveHookRegistry {
 
     runDirectiveResultInterceptions(name: string, directive: IDirective): void;
 
-    runPreInterceptions(directive: IDirective, scope: IScope, element: IAugmentedJQuery, attrs: IAttributes): void;
+    runPreInterceptions(directive: IDirective, scope: IScope, element: IAugmentedJQuery, attrs: IAttributes,
+                        controller?: IController | IController[] | {[key: string]: IController}): void;
 }
 
 class DirectiveHookRegistry implements IDirectiveHookRegistry {
@@ -43,8 +46,9 @@ class DirectiveHookRegistry implements IDirectiveHookRegistry {
         this.hooks.forEach(h => h.interceptDirectiveResult && h.interceptDirectiveResult(name, directive))
     }
 
-    runPreInterceptions(directive: IDirective, scope: IScope, element: IAugmentedJQuery, attrs: IAttributes): void {
-        this.hooks.forEach(h => h.interceptPre && h.interceptPre(directive, scope, element, attrs));
+    runPreInterceptions(directive: IDirective, scope: IScope, element: IAugmentedJQuery, attrs: IAttributes,
+                        controller?: IController | IController[] | {[key: string]: IController}): void {
+        this.hooks.forEach(h => h.interceptPre && h.interceptPre(directive, scope, element, attrs, controller));
     }
 }
 

@@ -1,16 +1,5 @@
 import * as angular from 'angular';
-import {
-    IAttributes,
-    IAugmentedJQuery,
-    IDirective,
-    IDirectiveCompileFn,
-    IDirectiveFactory,
-    IDirectiveLinkFn,
-    IDirectivePrePost,
-    IModule,
-    Injectable,
-    IScope
-} from 'angular';
+import {IDirective, IDirectiveCompileFn, IDirectiveFactory, IDirectiveLinkFn, IDirectivePrePost, IModule, Injectable} from 'angular';
 import {wrap} from '../utils';
 import hooks from './hooks';
 
@@ -73,35 +62,34 @@ function directiveFactoryResultTransformation(directiveName: string, result: IDi
         return result;
     }
 
+    const runPreHooks: IDirectiveLinkFn = (scope, element, attrs, controller?) => hooks.runPreInterceptions(result, scope, element, attrs, controller);
+
     let compileFn: IDirectiveCompileFn;
     if (result.compile) {
         compileFn = wrap(result.compile, {
             transformResult: (compileResult: IDirectiveLinkFn | IDirectivePrePost) => {
-                const runHooks = (scope: IScope, element: IAugmentedJQuery, attrs: IAttributes) => hooks.runPreInterceptions(result, scope, element, attrs);
                 if (typeof compileResult === 'function') {
                     return {
-                        pre: runHooks,
+                        pre: runPreHooks,
                         post: compileResult
                     };
                 } else if (compileResult) {
                     const pre = compileResult.pre ? wrap(compileResult.pre, {
-                        transformArguments: (fnArguments: any[]) => {
-                            runHooks(fnArguments[0], fnArguments[1], fnArguments[2]);
+                        transformArguments: function (fnArguments: any[]) {
+                            runPreHooks.apply(this, fnArguments);
                             return fnArguments;
                         }
-                    }) : runHooks;
+                    }) : runPreHooks;
                     return {...compileResult, pre};
                 } else {
-                    return {pre: runHooks};
+                    return {pre: runPreHooks};
                 }
             }
         });
     } else {
         const linkFn = result.link as IDirectiveLinkFn;
         compileFn = () => ({
-            pre: (scope, element, attrs) => {
-                hooks.runPreInterceptions(result, scope, element, attrs);
-            },
+            pre: runPreHooks,
             post: linkFn
         });
         delete result.link;
